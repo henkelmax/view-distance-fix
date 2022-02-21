@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "viewdistancefix",
+  "version": "${version}",
+  "name": "View Distance Fix",
+  "description": "View Distance Fix",
+  "authors": [
+    "Max Henkel"
+  ],
+  "contact": {
+    "website": "https://modrepo.de"
+  },
+  "license": "All Rights Reserved",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "de.maxhenkel.viewdistancefix.ViewDistanceFix"
+    ]
+  },
+  "mixins": [
+    "viewdistancefix.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_dependency}",
+    "java": ">=17"
+  }
+}

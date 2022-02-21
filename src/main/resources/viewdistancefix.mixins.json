@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8.4",
+  "package": "de.maxhenkel.viewdistancefix.mixin",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [
+    "ServerPlayerMixin",
+    "ServerGamePacketListenerImplMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
