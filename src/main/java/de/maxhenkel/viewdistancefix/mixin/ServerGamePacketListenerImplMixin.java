@@ -1,9 +1,8 @@
 package de.maxhenkel.viewdistancefix.mixin;
 
 import de.maxhenkel.viewdistancefix.ViewDistanceFix;
-import io.netty.util.concurrent.Future;
-import io.netty.util.concurrent.GenericFutureListener;
 import net.minecraft.network.Connection;
+import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket;
 import net.minecraft.server.MinecraftServer;
@@ -25,8 +24,8 @@ public class ServerGamePacketListenerImplMixin {
     @Final
     private MinecraftServer server;
 
-    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lio/netty/util/concurrent/GenericFutureListener;)V"))
-    private void injected(Connection connection, Packet<?> p, @Nullable GenericFutureListener<? extends Future<? super Void>> listener) {
+    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V"))
+    private void injected(Connection connection, Packet<?> p, @Nullable PacketSendListener listener) {
         if (p instanceof ClientboundSetChunkCacheRadiusPacket) {
             connection.send(new ClientboundSetChunkCacheRadiusPacket(Math.max(server.getPlayerList().getViewDistance(), ViewDistanceFix.distances.getOrDefault(player.getUUID(), server.getPlayerList().getViewDistance()))), listener);
         } else {
