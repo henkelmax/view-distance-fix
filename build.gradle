@@ -1,21 +1,10 @@
-buildscript {
-    repositories {
-        maven { url = 'https://maven.maxhenkel.de/repository/public' }
-        mavenLocal()
-    }
-    dependencies {
-        classpath group: 'de.maxhenkel.forge-update', name: 'forge-update', version: '1.0.4'
-    }
-}
-
 plugins {
-    id "fabric-loom" version "1.0-SNAPSHOT"
-    id "com.matthewprenger.cursegradle" version "1.4.0"
-    id "com.github.johnrengelman.shadow" version "7.1.0"
-    id "com.modrinth.minotaur" version "2.+"
+    id 'fabric-loom' version '1.2-SNAPSHOT'
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'com.modrinth.minotaur' version '2.+'
+    id 'mod-update' version '2.0.0'
 }
-
-apply plugin: 'forge-update'
 
 sourceCompatibility = JavaVersion.VERSION_17
 targetCompatibility = JavaVersion.VERSION_17
@@ -28,7 +17,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url = 'https://maven.maxhenkel.de/repository/public' }
-    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = 'https://maven.fabricmc.net/' }
 }
 
 runClient.doFirst {
@@ -47,15 +36,15 @@ dependencies {
 }
 
 processResources {
-    filesMatching("fabric.mod.json") {
-        expand "version": version,
-                "minecraft_dependency": minecraft_dependency,
-                "loader_version": loader_version
+    filesMatching('fabric.mod.json') {
+        expand 'version': version,
+                'minecraft_dependency': minecraft_dependency,
+                'loader_version': loader_version
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.encoding = "UTF-8"
+    it.options.encoding = 'UTF-8'
     it.options.release = 17
 }
 
@@ -64,7 +53,7 @@ java {
 }
 
 jar {
-    from("LICENSE") {
+    from('LICENSE') {
         rename { "${it}_${project.archivesBaseName}" }
     }
 }
@@ -77,8 +66,8 @@ curseforge {
         changelog = file('changelog.md')
         releaseType = release_type
         addGameVersion curseforge_minecraft_version
-        addGameVersion "Fabric"
-        addGameVersion "Java 17"
+        addGameVersion 'Fabric'
+        addGameVersion 'Java 17'
         mainArtifact(file("${project.buildDir}/libs/${archivesBaseName}-${version}.jar")) {
             displayName = "[FABRIC][${minecraft_version}] ${mod_name} ${mod_version}"
         }
@@ -105,42 +94,31 @@ modrinth {
     versionName = "[FABRIC][${minecraft_version}] ${mod_name} ${mod_version}"
     uploadFile = remapJar
     versionType = release_type.toUpperCase()
-    changelog = file("changelog.md").text
+    changelog = file('changelog.md').text
     gameVersions = [minecraft_version]
     loaders = ['fabric']
     syncBodyFrom = file("${rootDir}/readme.md").text
 }
 tasks.modrinth.dependsOn(build)
 
-forgeUpdate {
-    def messages = []
-    file('changelog.md').eachLine { String line ->
-        if (line.trim().startsWith('-')) {
-            messages.add(line.replaceFirst('-', '').trim())
-        }
-    }
-
+modUpdate {
     serverURL = 'https://update.maxhenkel.de/'
-    apiKey = file('forge_update_api_key.txt').exists() ? file('forge_update_api_key.txt').text : ''
     modID = mod_id
     gameVersion = minecraft_version
-    modLoader = "fabric"
+    modLoader = 'fabric'
     modVersion = mod_version
-    updateMessages = messages
+    changelogFile = file('changelog.md')
     releaseType = release_type
     tags = recommended == 'true' ? ['recommended'] : []
 }
 
 shadowJar {
     configurations = [project.configurations.shadow]
-    classifier 'shadow-dev'
+    archiveClassifier = 'shadow-dev'
     relocate 'de.maxhenkel.configbuilder', "de.maxhenkel.${mod_id}.configbuilder"
 }
 
-prepareRemapJar {
-    dependsOn shadowJar
-}
-
 remapJar {
-    input = shadowJar.archiveFile.get()
+    dependsOn shadowJar
+    inputFile = shadowJar.archiveFile.get()
 }
