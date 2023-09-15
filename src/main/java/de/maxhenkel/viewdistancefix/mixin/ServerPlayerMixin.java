@@ -4,7 +4,7 @@ import com.mojang.authlib.GameProfile;
 import de.maxhenkel.viewdistancefix.ViewDistanceFix;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket;
-import net.minecraft.network.protocol.game.ServerboundClientInformationPacket;
+import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.player.Player;
@@ -26,9 +26,9 @@ public abstract class ServerPlayerMixin extends Player {
     }
 
     @Inject(method = "updateOptions", at = @At("HEAD"))
-    private void updateOptions(ServerboundClientInformationPacket packet, CallbackInfo cir) {
-        ViewDistanceFix.distances.put(getUUID(), packet.viewDistance());
-        connection.send(new ClientboundSetChunkCacheRadiusPacket(packet.viewDistance()));
+    private void updateOptions(ClientInformation clientInformation, CallbackInfo cir) {
+        ViewDistanceFix.distances.put(getUUID(), clientInformation.viewDistance());
+        connection.send(new ClientboundSetChunkCacheRadiusPacket(clientInformation.viewDistance()));
     }
 
 }
