@@ -29,6 +29,15 @@ dependencies {
     mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
+    Set<String> apiModules = [
+            'fabric-api-base',
+            'fabric-networking-api-v1'
+    ]
+
+    apiModules.forEach {
+        include(modImplementation(fabricApi.module(it, fabric_version)))
+    }
+
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 
     implementation "de.maxhenkel.configbuilder:configbuilder:${configbuilder_version}"
@@ -39,7 +48,8 @@ processResources {
     filesMatching('fabric.mod.json') {
         expand 'version': version,
                 'minecraft_dependency': minecraft_dependency,
-                'loader_version': loader_version
+                'loader_version': loader_version,
+                'min_fabric_version': fabric_version
     }
 }
 

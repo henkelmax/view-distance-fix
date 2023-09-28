@@ -24,5 +24,8 @@
     "fabricloader": ">=${loader_version}",
     "minecraft": "${minecraft_dependency}",
     "java": ">=17"
+  },
+  "breaks": {
+    "fabric-api": "<${min_fabric_version}"
   }
 }
