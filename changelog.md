@@ -1,1 +1,1 @@
-- Fixed not being able to join servers
+- Updated to 1.20.3
