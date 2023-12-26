@@ -24,8 +24,5 @@
   "depends": {
     "fabricloader": "${fabric_loader_dependency}",
     "minecraft": "${minecraft_dependency}"
-  },
-  "breaks": {
-    "fabric-api": "${fabric_api_dependency_breaks}"
   }
 }
