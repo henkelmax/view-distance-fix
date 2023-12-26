@@ -1,1 +1,1 @@
-- Fixed not being able to join servers
+- Updated dependencies
