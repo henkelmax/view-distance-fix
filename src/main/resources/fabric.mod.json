@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "viewdistancefix",
-  "version": "${version}",
+  "version": "${mod_version}",
   "name": "View Distance Fix",
   "description": "View Distance Fix",
   "authors": [
@@ -21,8 +21,10 @@
     "viewdistancefix.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=${loader_version}",
-    "minecraft": "${minecraft_dependency}",
-    "java": ">=17"
+    "fabricloader": "${fabric_loader_dependency}",
+    "minecraft": "${minecraft_dependency}"
+  },
+  "breaks": {
+    "fabric-api": "${fabric_api_dependency_breaks}"
   }
 }
