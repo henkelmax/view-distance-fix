@@ -1,2 +1,1 @@
-- Updated dependencies
-- Added mod icon
+- Updated to 1.20.5
