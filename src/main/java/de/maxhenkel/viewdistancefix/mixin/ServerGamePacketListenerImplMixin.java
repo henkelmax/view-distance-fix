@@ -2,8 +2,8 @@ package de.maxhenkel.viewdistancefix.mixin;
 
 import com.mojang.authlib.GameProfile;
 import de.maxhenkel.viewdistancefix.ViewDistanceFix;
+import io.netty.channel.ChannelFutureListener;
 import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundSetChunkCacheRadiusPacket;
 import net.minecraft.server.MinecraftServer;
@@ -21,12 +21,12 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Final
     protected MinecraftServer server;
 
-    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lnet/minecraft/network/PacketSendListener;Z)V"))
-    private void injected(Connection connection, Packet<?> packet, PacketSendListener packetSendListener, boolean bl) {
+    @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V"))
+    private void injected(Connection instance, Packet<?> packet, ChannelFutureListener channelFutureListener, boolean bl) {
         if (packet instanceof ClientboundSetChunkCacheRadiusPacket) {
-            connection.send(new ClientboundSetChunkCacheRadiusPacket(Math.max(server.getPlayerList().getViewDistance(), ViewDistanceFix.distances.getOrDefault(getOwner().getId(), server.getPlayerList().getViewDistance()))), packetSendListener, bl);
+            instance.send(new ClientboundSetChunkCacheRadiusPacket(Math.max(server.getPlayerList().getViewDistance(), ViewDistanceFix.distances.getOrDefault(getOwner().getId(), server.getPlayerList().getViewDistance()))), channelFutureListener, bl);
         } else {
-            connection.send(packet, packetSendListener, bl);
+            instance.send(packet, channelFutureListener, bl);
         }
     }
 

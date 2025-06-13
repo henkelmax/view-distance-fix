@@ -2,7 +2,6 @@ package de.maxhenkel.viewdistancefix.mixin;
 
 import com.mojang.authlib.GameProfile;
 import de.maxhenkel.viewdistancefix.ViewDistanceFix;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -15,8 +14,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player {
 
-    public ServerPlayerMixin(Level level, BlockPos blockPos, float f, GameProfile gameProfile) {
-        super(level, blockPos, f, gameProfile);
+    public ServerPlayerMixin(Level level, GameProfile gameProfile) {
+        super(level, gameProfile);
     }
 
     @Inject(method = "updateOptions", at = @At("HEAD"))
