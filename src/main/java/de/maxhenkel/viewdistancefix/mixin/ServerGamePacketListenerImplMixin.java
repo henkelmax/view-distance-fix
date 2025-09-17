@@ -24,7 +24,7 @@ public abstract class ServerGamePacketListenerImplMixin {
     @Redirect(method = "send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/network/Connection;send(Lnet/minecraft/network/protocol/Packet;Lio/netty/channel/ChannelFutureListener;Z)V"))
     private void injected(Connection instance, Packet<?> packet, ChannelFutureListener channelFutureListener, boolean bl) {
         if (packet instanceof ClientboundSetChunkCacheRadiusPacket) {
-            instance.send(new ClientboundSetChunkCacheRadiusPacket(Math.max(server.getPlayerList().getViewDistance(), ViewDistanceFix.distances.getOrDefault(getOwner().getId(), server.getPlayerList().getViewDistance()))), channelFutureListener, bl);
+            instance.send(new ClientboundSetChunkCacheRadiusPacket(Math.max(server.getPlayerList().getViewDistance(), ViewDistanceFix.distances.getOrDefault(getOwner().id(), server.getPlayerList().getViewDistance()))), channelFutureListener, bl);
         } else {
             instance.send(packet, channelFutureListener, bl);
         }
